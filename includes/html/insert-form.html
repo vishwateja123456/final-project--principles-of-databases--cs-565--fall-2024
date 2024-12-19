@@ -1,8 +1,19 @@
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  <fieldset>
-    <legend>Insert</legend>
-    INSERT INTO artist VALUES ( <input type="text" name="artist-id" placeholder="artist_id" required>, <input type="text" name="artist-name" placeholder="artist_name" required> );
-    <input type="hidden" name="submitted" value="3">
-    <p><input type="submit" value="insert"></p>
-  </fieldset>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert New Account</title>
+</head>
+<body>
+    <h2>Insert New Account</h2>
+    <form action="../php/insert.php" method="post">
+        <label>Site/App Name: <input type="text" name="website_name" required></label><br><br>
+        <label>URL: <input type="text" name="url"></label><br><br>
+        <label>Email: <input type="email" name="email" required></label><br><br>
+        <label>Username: <input type="text" name="username" required></label><br><br>
+        <label>Password: <input type="password" name="password" required></label><br><br>
+        <label>Comment: <textarea name="comment" rows="4" cols="50"></textarea></label><br><br>
+        <button type="submit">Add Account</button>
+    </form>
+</body>
+</html>

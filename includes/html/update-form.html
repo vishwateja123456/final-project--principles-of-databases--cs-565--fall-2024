@@ -1,18 +1,17 @@
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-  <fieldset>
-    <legend>Update</legend>
-    UPDATE artist SET
-    <select name="current-attribute" id="current-attribute">
-      <option>artist_name</option>
-      <option>artist_id</option>
-    </select>
-    = <input type="text" name="new-attribute" required> WHERE
-    <select name="query-attribute" id="query-attribute">
-      <option>artist_id</option>
-      <option>artist_name</option>
-    </select>
-    = <input type="text" name="pattern" required>
-    <input type="hidden" name="submitted" value="2">
-    <p><input type="submit" value="update"></p>
-  </fieldset>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Account</title>
+</head>
+<body>
+    <h2>Update Account</h2>
+    <form action="../php/update.php" method="post">
+        <label>Column to Update: <input type="text" name="column" required></label><br><br>
+        <label>New Value: <input type="text" name="new_value" required></label><br><br>
+        <label>Pattern Column: <input type="text" name="pattern_column" required></label><br><br>
+        <label>Pattern Value: <input type="text" name="pattern_value" required></label><br><br>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
