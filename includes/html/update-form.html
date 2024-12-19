@@ -1,17 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update Account</title>
-</head>
-<body>
-    <h2>Update Account</h2>
-    <form action="../php/update.php" method="post">
-        <label>Column to Update: <input type="text" name="column" required></label><br><br>
-        <label>New Value: <input type="text" name="new_value" required></label><br><br>
-        <label>Pattern Column: <input type="text" name="pattern_column" required></label><br><br>
-        <label>Pattern Value: <input type="text" name="pattern_value" required></label><br><br>
-        <button type="submit">Update</button>
-    </form>
-</body>
-</html>
+<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+  <fieldset>
+      <legend>Update Account</legend>
+      
+      <label for="current-attribute-name">Update Attribute:</label>
+      <select name="current-attribute-name" id="current-attribute-name" required>
+          <option value="app_name">App Name</option>
+          <option value="url">URL</option>
+          <option value="comment">Comment</option>
+          <option value="first_name">First Name</option>
+          <option value="last_name">Last Name</option>
+          <option value="username">Username</option>
+          <option value="email">Email</option>
+          <option value="password">Password</option>
+      </select>
+
+      <label for="new-attribute">New Value:</label>
+      <input 
+          type="text" 
+          id="new-attribute" 
+          name="new-attribute" 
+          placeholder="Enter New Value" 
+          required>
+
+      <label for="query-attribute">Search Attribute:</label>
+      <select name="query-attribute" id="query-attribute" required>
+          <option value="app_name">App Name</option>
+          <option value="url">URL</option>
+          <option value="comment">Comment</option>
+          <option value="first_name">First Name</option>
+          <option value="last_name">Last Name</option>
+          <option value="username">Username</option>
+          <option value="email">Email</option>
+          <option value="password">Password</option>
+      </select>
+
+      <label for="pattern">Search Value:</label>
+      <input 
+          type="text" 
+          id="pattern" 
+          name="pattern" 
+          placeholder="Enter Search Value" 
+          required>
+
+      <input type="hidden" name="submitted" value="UPDATE_ACCOUNT">
+      <button type="submit">Update</button>
+  </fieldset>
+</form>
