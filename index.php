@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     switch ($option) {
         case 'SEARCH':
             $search = $_POST["search"] ?? '';
-            if ($search !== '') {
+            if (!empty($search)) {
                 searchAccounts($search);
             } else {
                 echo '<div id="error">Search field is empty. Please try again.</div>';
@@ -31,22 +31,56 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             break;
 
         case 'INSERT_ACCOUNT':
-            $appName = $_POST["app_name"] ?? '';
-            $url = $_POST["url"] ?? '';
-            $comment = $_POST["comment"] ?? '';
-            $firstName = $_POST["first_name"] ?? '';
-            $lastName = $_POST["last_name"] ?? '';
-            $username = $_POST["username"] ?? '';
-            $email = $_POST["email"] ?? '';
-            $password = $_POST["password"] ?? '';
+    // Collect and validate form data
+    $appName = $_POST['app_name'] ?? null;
+    $url = $_POST['url'] ?? null;
+    $comment = $_POST['comment'] ?? null;
+    $firstName = $_POST['first_name'] ?? null;
+    $lastName = $_POST['last_name'] ?? null;
+    $username = $_POST['username'] ?? null;
+    $email = $_POST['email'] ?? null;
+    $password = $_POST['password'] ?? null;
 
-            if ($appName && $firstName && $lastName && $username && $email && $password) {
-                insertAccount($appName, $url, $comment, $firstName, $lastName, $username, $email, $password);
-                echo "<div>Account inserted successfully!</div>";
-            } else {
-                echo '<div id="error">Please fill in all required fields.</div>';
-            }
-            break;
+    $missingFields = [];
+
+    if (!$appName) $missingFields[] = "App Name";
+    if (!$firstName) $missingFields[] = "First Name";
+    if (!$lastName) $missingFields[] = "Last Name";
+    if (!$username) $missingFields[] = "Username";
+    if (!$email) $missingFields[] = "Email";
+    if (!$password) $missingFields[] = "Password";
+
+    if (empty($missingFields)) {
+        // All required fields are filled, proceed with insertion
+        try {
+            $pdo = connectDB();
+
+            // Insert account data
+            $stmt = $pdo->prepare("
+                INSERT INTO accounts (website_name, url, comment, first_name, last_name, username, email, password, created_at) 
+                VALUES (:app_name, :url, :comment, :first_name, :last_name, :username, :email, AES_ENCRYPT(:password, 'secret_key'), NOW())
+            ");
+            $stmt->execute([
+                ':app_name' => $appName,
+                ':url' => $url ?: null,
+                ':comment' => $comment ?: null,
+                ':first_name' => $firstName,
+                ':last_name' => $lastName,
+                ':username' => $username,
+                ':email' => $email,
+                ':password' => $password
+            ]);
+
+            echo "<div>Account inserted successfully!</div>";
+        } catch (PDOException $e) {
+            echo "<div id='error'>Insert failed: " . $e->getMessage() . "</div>";
+        }
+    } else {
+        // Display specific missing fields
+        echo '<div id="error">Please fill in the following required fields: ' . implode(", ", $missingFields) . '.</div>';
+    }
+    break;
+
 
         case 'DELETE_ACCOUNT':
             $attribute = $_POST["current-attribute"] ?? '';

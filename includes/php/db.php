@@ -47,28 +47,37 @@ function insertAccount($appName, $url, $userId) {
 /**
  * Searches for accounts in the database.
  *
- * @param string $search The search term.
+
  */
 function searchAccounts($search) {
     $pdo = connectDB();
     try {
         $stmt = $pdo->prepare("
             SELECT 
-                id, 
-                website_name AS app_name, 
-                url, 
-                comment, 
-                first_name, 
-                last_name, 
-                username, 
-                email, 
-                CAST(AES_DECRYPT(password, 'secret_key') AS CHAR) AS decrypted_password, 
-                created_at 
-            FROM Accounts 
-            WHERE website_name LIKE :search OR username LIKE :search OR email LIKE :search
+                accounts.id AS id, 
+                accounts.website_name AS app_name, 
+                accounts.url AS url, 
+                passwords.comment AS comment, 
+                users.first_name AS first_name, 
+                users.last_name AS last_name, 
+                users.username AS username, 
+                users.email AS email, 
+                CAST(AES_DECRYPT(passwords.password, 'secret_key') AS CHAR) AS decrypted_password, 
+                accounts.created_at AS created_at 
+            FROM accounts 
+            JOIN passwords ON accounts.id = passwords.account_id 
+            JOIN users ON accounts.user_id = users.id 
+            WHERE accounts.website_name LIKE :search 
+               OR users.username LIKE :search 
+               OR users.email LIKE :search
         ");
         $stmt->execute([':search' => "%$search%"]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debugging: Print the results array
+        ///echo "<pre>";
+        //print_r($results);
+        //echo "</pre>";
 
         if ($results) {
             displayTable($results);
@@ -79,6 +88,7 @@ function searchAccounts($search) {
         die("Search failed: " . $e->getMessage());
     }
 }
+
 
 /**
  * Updates an account in the database.
@@ -126,7 +136,7 @@ function displayTable($results) {
             <tbody>";
     foreach ($results as $row) {
         echo "<tr>
-                <td>" . htmlspecialchars($row['id'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['id'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['app_name'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['url'] ?? 'N/A') . "</td>
                 <td>" . htmlspecialchars($row['comment'] ?? 'N/A') . "</td>
@@ -141,8 +151,6 @@ function displayTable($results) {
     echo "  </tbody>
           </table>";
 }
-
-
 
 
 ?>
