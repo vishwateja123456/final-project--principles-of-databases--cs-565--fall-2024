@@ -55,10 +55,17 @@ function searchAccounts($search) {
         $stmt = $pdo->prepare("
             SELECT 
                 id, 
-                website_name AS app_name, -- Alias for consistency
-                url
-            FROM Accounts
-            WHERE website_name LIKE :search OR url LIKE :search
+                website_name AS app_name, 
+                url, 
+                comment, 
+                first_name, 
+                last_name, 
+                username, 
+                email, 
+                CAST(AES_DECRYPT(password, 'secret_key') AS CHAR) AS decrypted_password, 
+                created_at 
+            FROM Accounts 
+            WHERE website_name LIKE :search OR username LIKE :search OR email LIKE :search
         ");
         $stmt->execute([':search' => "%$search%"]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -70,23 +77,6 @@ function searchAccounts($search) {
         }
     } catch (PDOException $e) {
         die("Search failed: " . $e->getMessage());
-    }
-}
-
-/**
- * Deletes an account from the database.
- *
- * @param string $attribute The column to match (e.g., website_name).
- * @param string $pattern The value to match.
- */
-function deleteAccount($attribute, $pattern) {
-    $pdo = connectDB();
-    try {
-        $stmt = $pdo->prepare("DELETE FROM Accounts WHERE $attribute = :pattern");
-        $stmt->execute([':pattern' => $pattern]);
-        echo "Account deleted successfully!<br>";
-    } catch (PDOException $e) {
-        die("Delete failed: " . $e->getMessage());
     }
 }
 
@@ -124,17 +114,35 @@ function displayTable($results) {
                     <th>ID</th>
                     <th>App Name</th>
                     <th>URL</th>
+                    <th>Comment</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Created At</th>
                 </tr>
             </thead>
             <tbody>";
     foreach ($results as $row) {
         echo "<tr>
-                <td>" . htmlspecialchars($row['id']) . "</td>
-                <td>" . htmlspecialchars($row['app_name']) . "</td>
-                <td>" . htmlspecialchars($row['url'] ?? 'NULL') . "</td>
+                <td>" . htmlspecialchars($row['id'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['app_name'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['url'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['comment'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['first_name'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['last_name'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['username'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['email'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['decrypted_password'] ?? 'N/A') . "</td>
+                <td>" . htmlspecialchars($row['created_at'] ?? 'N/A') . "</td>
               </tr>";
     }
     echo "  </tbody>
           </table>";
 }
+
+
+
+
 ?>
