@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete Account</title>
-</head>
-<body>
-    <h2>Delete Account</h2>
-    <form action="../php/delete.php" method="post">
-        <label>Column to Match: <input type="text" name="pattern_column" required></label><br><br>
-        <label>Pattern Value: <input type="text" name="pattern_value" required></label><br><br>
-        <button type="submit">Delete</button>
-    </form>
-</body>
-</html>
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <fieldset>
+        <legend>Delete Account</legend>
+        DELETE FROM accounts WHERE
+        <select name="current-attribute" required>
+            <option value="app_name">App Name</option>
+            <option value="user_name">Username</option>
+        </select>
+        = <input type="text" name="pattern" required>
+        <input type="hidden" name="submitted" value="DELETE_ACCOUNT">
+        <input type="submit" value="Delete">
+    </fieldset>
+  </form>
+  

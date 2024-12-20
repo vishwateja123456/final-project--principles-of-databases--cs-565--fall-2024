@@ -1,48 +1,25 @@
-<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-  <fieldset>
-      <legend>Update Account</legend>
-      
-      <label for="current-attribute-name">Update Attribute:</label>
-      <select name="current-attribute-name" id="current-attribute-name" required>
-          <option value="app_name">App Name</option>
-          <option value="url">URL</option>
-          <option value="comment">Comment</option>
-          <option value="first_name">First Name</option>
-          <option value="last_name">Last Name</option>
-          <option value="username">Username</option>
-          <option value="email">Email</option>
-          <option value="password">Password</option>
-      </select>
-
-      <label for="new-attribute">New Value:</label>
-      <input 
-          type="text" 
-          id="new-attribute" 
-          name="new-attribute" 
-          placeholder="Enter New Value" 
-          required>
-
-      <label for="query-attribute">Search Attribute:</label>
-      <select name="query-attribute" id="query-attribute" required>
-          <option value="app_name">App Name</option>
-          <option value="url">URL</option>
-          <option value="comment">Comment</option>
-          <option value="first_name">First Name</option>
-          <option value="last_name">Last Name</option>
-          <option value="username">Username</option>
-          <option value="email">Email</option>
-          <option value="password">Password</option>
-      </select>
-
-      <label for="pattern">Search Value:</label>
-      <input 
-          type="text" 
-          id="pattern" 
-          name="pattern" 
-          placeholder="Enter Search Value" 
-          required>
-
-      <input type="hidden" name="submitted" value="UPDATE_ACCOUNT">
-      <button type="submit">Update</button>
-  </fieldset>
-</form>
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <fieldset>
+        <legend>Update Account</legend>
+        UPDATE accounts SET
+        <select name="current-attribute-name" required>
+            <option value="app_name">App Name</option>
+            <option value="first_name">First Name</option>            
+            <option value="username">Username</option>
+            <option value="email id">Email id</option>
+            <option value="password">Password</option>
+        </select>
+        = <input type="text" name="new-attribute" placeholder="Enter New Value" required> WHERE
+        <select name="query-attribute" required>
+            <option value="app_name">App Name</option>            
+            <option value="first_name">First Name</option>
+            <option value="username">Username</option>
+            <option value="email id">Email id</option>
+            <option value="password">Password</option>
+        </select>
+        = <input type="text" name="pattern" placeholder="Enter Old Value" required>
+        <input type="hidden" name="submitted" value="UPDATE_ACCOUNT">
+        <input type="submit" value="Update">
+    </fieldset>
+  </form>
+  
